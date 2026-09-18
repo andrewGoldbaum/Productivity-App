@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Life Logistics Tracker</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%E2%9C%85%3C/text%3E%3C/svg%3E" />
+<link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header class="app-header">
+    <div class="header-top">
+      <h1>Life Logistics Tracker</h1>
+      <div class="sort-controls">
+        <label for="sort-select">Sort by</label>
+        <select id="sort-select">
+          <option value="weight">Urgency weight</option>
+          <option value="daysElapsed">Days since done</option>
+          <option value="name">Name</option>
+        </select>
+      </div>
+    </div>
+    <p class="summary" id="summary"></p>
+  </header>
+
+  <main id="task-list" class="task-list"></main>
+
+  <footer class="app-footer">
+    <p>Data is saved locally in this browser (localStorage). Weight = urgency &times; days since done &divide; interval (days allowed between times).</p>
+  </footer>
+
+  <div id="modal-overlay" class="modal-overlay hidden">
+    <div class="modal">
+      <p id="modal-message"></p>
+      <div class="modal-actions">
+        <button id="modal-no" class="btn">No</button>
+        <button id="modal-yes" class="btn primary">Yes</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>

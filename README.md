@@ -1,31 +1,44 @@
-# Productivity-App
-Creating an app to help me manage logistics. 
+# Life Logistics Tracker
 
-Can you make me an app that counts the number of days since I have done the following tasks?:
+A small single-page app that tracks how many days it's been since you last did each of a fixed set of recurring life-admin tasks, and ranks them by an urgency weight so you know what to prioritize.
 
-Fully getting ready
-Haircuts
-Food Shopping/Toiletry Shopping/Other Supplies
-Acquiring Medication
-House Cleaning
-Laundry
-Making sure I have fitting clothes
-Checking email
-Budgeting
+## Running it
 
-And when I click that I’ve done a task, can you reset back to zero days to start the count over? That’s the basic functionality.
+No build step or dependencies — it's plain HTML/CSS/JS.
 
-Advanced functionality:
+- Open `index.html` directly in a browser, or
+- Serve the folder with any static file server, e.g. `python3 -m http.server` from this directory, then visit `http://localhost:8000`.
 
-Weighted prioritization - I want the app to signify to me which tasks are most urgent using a weighting system: days since the task was done multiplied by default urgency of the task on a zero to one scale divided by how many days can elapse between each time doing the task. I will supply those values:
-Fully getting ready - 0.73 urgency, every day 
-Haircuts - 0.35 urgency, every 28 days
-Food shopping/Toiletry Shopping/Other Supplies - 0.63 urgency, every 5 days
-Acquiring Medication - 0.9 urgency, every 20 days 
-House cleaning - 0.45 urgency, every 7 days
-Laundry - 0.63 urgency, every 7 days
-Making sure I have fitting clothes - 0.25, every 28 days
-Checking email - 0.8 urgency, every day (it’s supposed to be a routine, so if there’s a backlog make it urgent)
-Budgeting - 0.5, every 14 days
-Along with the weighted prioritization, I want the app to always separately show me the number of days elapsed, and if the number of days elapsed reached the number of days in the denominator. This way, if for example, it’s always discounting one of the lower-weighted ones in favor of something else, I can sometimes make a decision to override the priority weightings and do my own thing. 
-Partial Completion - I want the app to have room for partially completing a task: doing some but not all of my laundry, doing some cleaning but not finishing it, doing some but not all of my morning routine, checking my emails but not responding to each thing within them, doing a partial food/toiletry/other-supply shopping, etc. In those cases, what I want you to do is double the denominator (how much time you can realistically let elapse) so that it counts more slowly in the weighting. The only exception I would say is acquiring medication, since that depends on whether the remaining medication is the consequential one (the one that’s actually close to running out). With specifically that one, still let me choose to double the denominator if I want, but confirm with me before I do so that the medication I just got was the important one and to not let me do so otherwise.
+All data is stored in the browser's `localStorage`, scoped to whatever origin/URL you open it from. There is no backend and no account — it's meant for one person using one browser.
+
+## Tasks tracked
+
+| Task | Urgency (0–1) | Interval |
+|---|---|---|
+| Fully Getting Ready | 0.73 | every day |
+| Haircuts | 0.35 | every 28 days |
+| Food / Toiletry / Other Supplies Shopping | 0.63 | every 5 days |
+| Acquiring Medication | 0.9 | every 20 days |
+| House Cleaning | 0.45 | every 7 days |
+| Laundry | 0.63 | every 7 days |
+| Making Sure I Have Fitting Clothes | 0.25 | every 28 days |
+| Checking Email | 0.8 | every day |
+| Budgeting | 0.5 | every 14 days |
+
+## How it works
+
+**Basic:** each task shows the number of days since it was last marked done. Clicking **Done** resets that count to zero.
+
+**Urgency weight:** each card shows
+
+```
+weight = urgency × (days since done) ÷ interval
+```
+
+Cards are sorted by weight (highest first) so the most pressing task floats to the top. A task also gets a red "at/past interval limit" flag once days-since-done reaches its interval, shown separately from the weight so you can always see raw elapsed-time-vs-interval even if the weighting is favoring something else.
+
+**Partial completion:** clicking **Partial** (instead of **Done**) still resets the day count to zero, but doubles the interval used in the weight calculation for that task going forward — since you only did part of it, the app assumes you can reasonably wait longer before it's flagged urgent again. The doubling is undone the next time you click **Done**.
+
+**Medication exception:** because "some medication" isn't the same as "the medication that's actually about to run out," clicking **Partial** on Acquiring Medication first asks you to confirm whether what you got was the consequential one. The interval only doubles if you confirm yes; otherwise the day count still resets (you did take action) but the interval stays at its normal 20 days.
+
+**Editing a date:** click the pencil icon next to "Last done" on any card to correct its date manually (useful for initial setup, or fixing a mistaken click).
