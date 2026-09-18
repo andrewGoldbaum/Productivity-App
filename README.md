@@ -37,8 +37,8 @@ weight = urgency × (days since done) ÷ interval
 
 Cards are sorted by weight (highest first) so the most pressing task floats to the top. A task also gets a red "at/past interval limit" flag once days-since-done reaches its interval, shown separately from the weight so you can always see raw elapsed-time-vs-interval even if the weighting is favoring something else.
 
-**Partial completion:** clicking **Partial** (instead of **Done**) still resets the day count to zero, but doubles the interval used in the weight calculation for that task going forward — since you only did part of it, the app assumes you can reasonably wait longer before it's flagged urgent again. The doubling is undone the next time you click **Done**.
+**Partial completion:** clicking **Partial** (instead of **Done**) does *not* reset the day count — some of the task is still outstanding, so days-since-fully-done keeps accumulating from whenever it was last fully done. What it does instead is double the interval used in the weight calculation going forward, since you've chipped away at it and it can reasonably be considered less urgent for the same elapsed time. The doubling is undone the next time you click **Done**.
 
-**Medication exception:** because "some medication" isn't the same as "the medication that's actually about to run out," clicking **Partial** on Acquiring Medication first asks you to confirm whether what you got was the consequential one. The interval only doubles if you confirm yes; otherwise the day count still resets (you did take action) but the interval stays at its normal 20 days.
+**Medication exception:** because "some medication" isn't the same as "the medication that's actually about to run out," clicking **Partial** on Acquiring Medication first asks you to confirm whether what you got was the consequential one. The interval only doubles if you confirm yes; if you say no, nothing changes (the day count keeps counting and the interval stays at its normal 20 days).
 
 **Editing a date:** click the pencil icon next to "Last done" on any card to correct its date manually (useful for initial setup, or fixing a mistaken click).

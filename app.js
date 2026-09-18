@@ -116,15 +116,18 @@ function markDone(taskId) {
 async function markPartial(taskId) {
   const task = TASKS.find((t) => t.id === taskId);
 
+  // Partial completion never resets the day count — some of the task is
+  // still outstanding, so days-since-fully-done keeps accumulating from
+  // whenever it was last fully done. It only doubles the interval, so the
+  // weight grows more slowly while you're still chipping away at it.
   if (task.isMedication) {
     const wasImportant = await showConfirm(
       "Was the medication you just got the one that was actually running low (the consequential one)? " +
         "Only confirm \"Yes\" if it was — this determines whether the app can safely wait longer before flagging this as urgent again."
     );
-    state[taskId].lastDone = todayStr();
-    state[taskId].doubled = wasImportant;
+    if (!wasImportant) return;
+    state[taskId].doubled = true;
   } else {
-    state[taskId].lastDone = todayStr();
     state[taskId].doubled = true;
   }
 
